@@ -1,0 +1,202 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* === Dark gradient background === */
+@layer base {
+  body {
+    background: linear-gradient(135deg, #0a0a1a 0%, #1a1035 40%, #0d1b2a 100%) !important;
+    min-height: 100vh;
+  }
+}
+
+/* === Floating blur orbs === */
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+  pointer-events: none;
+  animation: float 20s ease-in-out infinite;
+}
+
+.orb-pink {
+  width: 300px;
+  height: 300px;
+  background: #e040a0;
+  top: -60px;
+  right: -80px;
+  animation-delay: 0s;
+}
+
+.orb-orange {
+  width: 250px;
+  height: 250px;
+  background: #f09040;
+  bottom: 20%;
+  left: -60px;
+  animation-delay: -7s;
+}
+
+.orb-blue {
+  width: 280px;
+  height: 280px;
+  background: #4080f0;
+  bottom: -80px;
+  right: -40px;
+  animation-delay: -14s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -20px) scale(1.05); }
+  66% { transform: translate(-20px, 15px) scale(0.95); }
+}
+
+/* === Glass card utility === */
+.glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* === Gradient text === */
+.text-gradient {
+  background: linear-gradient(135deg, #ffffff 0%, #a0d0ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-warm {
+  background: linear-gradient(135deg, #ffffff 0%, #f0a060 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* === Card hover/tap interaction === */
+.card-interactive {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-interactive:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.card-interactive:active {
+  transform: scale(0.99);
+}
+
+/* === Winner card glow === */
+@keyframes borderGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 15px rgba(96, 165, 250, 0.3),
+      0 0 30px rgba(96, 165, 250, 0.1);
+  }
+  50% {
+    box-shadow:
+      0 0 20px rgba(96, 165, 250, 0.5),
+      0 0 40px rgba(96, 165, 250, 0.2);
+  }
+}
+
+.winner-glow {
+  animation: borderGlow 3s ease-in-out infinite;
+  border: 1px solid rgba(96, 165, 250, 0.4);
+}
+
+/* === Comparison card variants === */
+.glass-winner {
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.glass-dimmed {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.diff-badge-slow {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+  white-space: nowrap;
+}
+
+/* === Timeline slide-in animation === */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+.timeline-segment {
+  animation: slideIn 0.4s ease-out both;
+}
+
+/* === Realtime glow pulse === */
+@keyframes glow {
+  0%, 100% {
+    color: #4ade80;
+    text-shadow: 0 0 4px rgba(74, 222, 128, 0.3);
+  }
+  50% {
+    color: #86efac;
+    text-shadow: 0 0 12px rgba(74, 222, 128, 0.6);
+  }
+}
+
+.realtime-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* === Loading spinner === */
+.spinner-gradient {
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #60a5fa;
+  border-right-color: #a78bfa;
+}
+
+/* === Stagger animation utility === */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+
+/* === Chevron rotation === */
+.chevron-rotate {
+  transition: transform 0.3s ease;
+}
+
+.chevron-rotate.open {
+  transform: rotate(180deg);
+}

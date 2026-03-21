@@ -1,0 +1,21 @@
+{
+  "name": "딱도착 — 출근 경로 비교",
+  "short_name": "딱도착",
+  "description": "실시간 출근 경로 비교",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f9fafb",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
