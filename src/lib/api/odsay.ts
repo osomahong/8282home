@@ -25,8 +25,15 @@ export async function searchRoutes(
     SearchPathType: '0',
   });
 
+  const referer =
+    process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}`
+        : 'http://localhost:3000';
+
   const res = await fetch(`${ODSAY_BASE_URL}/searchPubTransPathT?${params}`, {
-    headers: { Referer: 'http://localhost:3000' },
+    headers: { Referer: referer },
   });
   if (!res.ok) {
     throw new Error(`ODsay API error: ${res.status} ${res.statusText}`);

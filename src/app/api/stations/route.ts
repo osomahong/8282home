@@ -33,14 +33,22 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: '검색어를 입력해 주세요.' }, { status: 400 });
     }
 
+    // Referer: ODsay는 등록된 URI와 대조
+    const referer =
+      process.env.VERCEL_PROJECT_PRODUCTION_URL
+        ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+        : process.env.VERCEL_URL
+          ? `https://${process.env.VERCEL_URL}`
+          : 'http://localhost:3000';
+
     // 지하철 + 버스 병렬 검색
     const [subwayRes, busRes] = await Promise.all([
       fetch(`${ODSAY_BASE_URL}/searchStation?${new URLSearchParams({
         lang: '0', stationName: cleaned, stationClass: '2', apiKey,
-      })}`, { headers: { Referer: 'http://localhost:3000' } }),
+      })}`, { headers: { Referer: referer } }),
       fetch(`${ODSAY_BASE_URL}/searchStation?${new URLSearchParams({
         lang: '0', stationName: cleaned, stationClass: '1', apiKey,
-      })}`, { headers: { Referer: 'http://localhost:3000' } }),
+      })}`, { headers: { Referer: referer } }),
     ]);
 
     if (!subwayRes.ok && !busRes.ok) {
