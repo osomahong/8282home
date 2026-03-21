@@ -26,11 +26,7 @@ export async function searchRoutes(
   });
 
   const referer =
-    process.env.VERCEL_PROJECT_PRODUCTION_URL
-      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : 'http://localhost:3000';
+    process.env.SITE_URL ?? 'http://localhost:3000';
 
   const res = await fetch(`${ODSAY_BASE_URL}/searchPubTransPathT?${params}`, {
     headers: { Referer: referer },

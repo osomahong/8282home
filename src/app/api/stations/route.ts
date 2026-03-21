@@ -35,11 +35,7 @@ export async function GET(request: NextRequest) {
 
     // Referer: ODsay는 등록된 URI와 대조
     const referer =
-      process.env.VERCEL_PROJECT_PRODUCTION_URL
-        ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-        : process.env.VERCEL_URL
-          ? `https://${process.env.VERCEL_URL}`
-          : 'http://localhost:3000';
+      process.env.SITE_URL ?? 'http://localhost:3000';
 
     // 지하철 + 버스 병렬 검색
     const [subwayRes, busRes] = await Promise.all([
