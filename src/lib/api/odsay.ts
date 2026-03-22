@@ -1,25 +1,19 @@
-import https from 'node:https';
+import { request } from 'undici';
 import type { OdsaySearchResponse, OdsayPath, RouteOption, RouteSegment, TransportType } from '@/types/route';
 
 const ODSAY_BASE_URL = 'https://api.odsay.com/v1/api';
 
 /**
- * Node.js https 모듈로 GET 요청. Referer 헤더를 확실히 전송합니다.
- * (Node.js fetch는 Referer를 forbidden header로 제거할 수 있음)
+ * undici.request로 ODsay API 호출. Referer 헤더를 확실히 전송합니다.
+ * Node.js fetch는 Referer를 forbidden header로 제거하므로 undici를 직접 사용.
  */
-export function odsayGet(url: string): Promise<unknown> {
-  const siteUrl = (process.env.SITE_URL ?? 'http://localhost:3000').trim().replace(/[\r\n]/g, '');
-  return new Promise((resolve, reject) => {
-    https.get(url, { headers: { Referer: siteUrl } }, (res) => {
-      let body = '';
-      res.on('data', (chunk) => { body += chunk; });
-      res.on('end', () => {
-        try { resolve(JSON.parse(body)); }
-        catch { reject(new Error(`ODsay JSON parse error: ${body.slice(0, 200)}`)); }
-      });
-      res.on('error', reject);
-    }).on('error', reject);
+export async function odsayGet(url: string): Promise<unknown> {
+  const siteUrl = (process.env.SITE_URL ?? 'http://localhost:3000').trim();
+  const { body } = await request(url, {
+    method: 'GET',
+    headers: { referer: siteUrl },
   });
+  return body.json();
 }
 
 /**
