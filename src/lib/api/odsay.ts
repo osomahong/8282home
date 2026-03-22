@@ -25,7 +25,7 @@ export async function searchRoutes(
   endX: number,
   endY: number,
 ): Promise<OdsaySearchResponse> {
-  const apiKey = process.env.ODSAY_API_KEY;
+  const apiKey = process.env.ODSAY_API_KEY?.trim();
   if (!apiKey) throw new Error('ODSAY_API_KEY가 설정되지 않았습니다.');
 
   const params = new URLSearchParams({

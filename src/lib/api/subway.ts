@@ -26,7 +26,7 @@ const SUBWAY_LINE_MAP: Record<string, string> = {
 export async function getSubwayArrival(
   stationName: string,
 ): Promise<NormalizedArrival[]> {
-  const apiKey = process.env.SEOUL_SUBWAY_API_KEY;
+  const apiKey = process.env.SEOUL_SUBWAY_API_KEY?.trim();
   if (!apiKey) throw new Error('SEOUL_SUBWAY_API_KEY가 설정되지 않았습니다.');
 
   // 역 이름에서 "역" 접미사 제거

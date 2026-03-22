@@ -9,7 +9,7 @@ const SEOUL_BUS_BASE = 'http://ws.bus.go.kr/api/rest/stationinfo';
 export async function getSeoulBusArrival(
   arsId: string,
 ): Promise<NormalizedArrival[]> {
-  const apiKey = process.env.SEOUL_BUS_API_KEY;
+  const apiKey = process.env.SEOUL_BUS_API_KEY?.trim();
   if (!apiKey) throw new Error('SEOUL_BUS_API_KEY가 설정되지 않았습니다.');
 
   const params = new URLSearchParams({

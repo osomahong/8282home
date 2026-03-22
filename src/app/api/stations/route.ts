@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: '검색어를 입력해 주세요.' }, { status: 400 });
   }
 
-  const apiKey = process.env.ODSAY_API_KEY;
+  const apiKey = process.env.ODSAY_API_KEY?.trim();
   if (!apiKey) {
     return NextResponse.json({ error: 'API 키가 설정되지 않았습니다.' }, { status: 500 });
   }
