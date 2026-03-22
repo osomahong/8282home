@@ -1,6 +1,26 @@
+import https from 'node:https';
 import type { OdsaySearchResponse, OdsayPath, RouteOption, RouteSegment, TransportType } from '@/types/route';
 
 const ODSAY_BASE_URL = 'https://api.odsay.com/v1/api';
+
+/**
+ * Node.js https 모듈로 GET 요청. Referer 헤더를 확실히 전송합니다.
+ * (Node.js fetch는 Referer를 forbidden header로 제거할 수 있음)
+ */
+export function odsayGet(url: string): Promise<unknown> {
+  const siteUrl = process.env.SITE_URL ?? 'http://localhost:3000';
+  return new Promise((resolve, reject) => {
+    https.get(url, { headers: { Referer: siteUrl } }, (res) => {
+      let body = '';
+      res.on('data', (chunk) => { body += chunk; });
+      res.on('end', () => {
+        try { resolve(JSON.parse(body)); }
+        catch { reject(new Error(`ODsay JSON parse error: ${body.slice(0, 200)}`)); }
+      });
+      res.on('error', reject);
+    }).on('error', reject);
+  });
+}
 
 /**
  * ODsay 경로탐색 API를 서버사이드에서 호출합니다.
@@ -25,22 +45,13 @@ export async function searchRoutes(
     SearchPathType: '0',
   });
 
-  const siteUrl = process.env.SITE_URL ?? 'http://localhost:3000';
+  const data = await odsayGet(`${ODSAY_BASE_URL}/searchPubTransPathT?${params}`) as Record<string, unknown>;
 
-  const res = await fetch(`${ODSAY_BASE_URL}/searchPubTransPathT?${params}`, {
-    referrer: siteUrl,
-    referrerPolicy: 'unsafe-url',
-  });
-  if (!res.ok) {
-    throw new Error(`ODsay API error: ${res.status} ${res.statusText}`);
-  }
-
-  const data = await res.json();
   if (data.error) {
     throw new Error(`ODsay error: ${JSON.stringify(data.error)}`);
   }
 
-  return data as OdsaySearchResponse;
+  return data as unknown as OdsaySearchResponse;
 }
 
 /**

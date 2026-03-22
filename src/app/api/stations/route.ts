@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { odsayGet } from '@/lib/api/odsay';
 
 const ODSAY_BASE_URL = 'https://api.odsay.com/v1/api';
 
@@ -33,26 +34,17 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: '검색어를 입력해 주세요.' }, { status: 400 });
     }
 
-    // ODsay는 등록된 URI와 Referer를 대조
-    const siteUrl = process.env.SITE_URL ?? 'http://localhost:3000';
-    const fetchOpts = { referrer: siteUrl, referrerPolicy: 'unsafe-url' as const };
+    // 지하철 + 버스 병렬 검색 (odsayGet은 https 모듈로 Referer 헤더를 확실히 전송)
+    interface OdsayStationResponse { error?: unknown; result?: { station?: OdsayStation[] } }
 
-    // 지하철 + 버스 병렬 검색
-    const [subwayRes, busRes] = await Promise.all([
-      fetch(`${ODSAY_BASE_URL}/searchStation?${new URLSearchParams({
+    const [subwayData, busData] = await Promise.all([
+      odsayGet(`${ODSAY_BASE_URL}/searchStation?${new URLSearchParams({
         lang: '0', stationName: cleaned, stationClass: '2', apiKey,
-      })}`, fetchOpts),
-      fetch(`${ODSAY_BASE_URL}/searchStation?${new URLSearchParams({
+      })}`) as Promise<OdsayStationResponse>,
+      odsayGet(`${ODSAY_BASE_URL}/searchStation?${new URLSearchParams({
         lang: '0', stationName: cleaned, stationClass: '1', apiKey,
-      })}`, fetchOpts),
+      })}`) as Promise<OdsayStationResponse>,
     ]);
-
-    if (!subwayRes.ok && !busRes.ok) {
-      return NextResponse.json({ error: '역/정류장 검색에 실패했습니다.' }, { status: 502 });
-    }
-
-    const subwayData = subwayRes.ok ? await subwayRes.json() : { result: { station: [] } };
-    const busData = busRes.ok ? await busRes.json() : { result: { station: [] } };
 
     // 에러 응답(-98: 결과 없음)은 빈 배열로 처리
     const subwayStations: OdsayStation[] =
