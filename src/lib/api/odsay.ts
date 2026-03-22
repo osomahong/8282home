@@ -25,11 +25,11 @@ export async function searchRoutes(
     SearchPathType: '0',
   });
 
-  const referer =
-    process.env.SITE_URL ?? 'http://localhost:3000';
+  const siteUrl = process.env.SITE_URL ?? 'http://localhost:3000';
 
   const res = await fetch(`${ODSAY_BASE_URL}/searchPubTransPathT?${params}`, {
-    headers: { Referer: referer },
+    referrer: siteUrl,
+    referrerPolicy: 'unsafe-url',
   });
   if (!res.ok) {
     throw new Error(`ODsay API error: ${res.status} ${res.statusText}`);
