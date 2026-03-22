@@ -8,7 +8,7 @@ const ODSAY_BASE_URL = 'https://api.odsay.com/v1/api';
  * (Node.js fetch는 Referer를 forbidden header로 제거할 수 있음)
  */
 export function odsayGet(url: string): Promise<unknown> {
-  const siteUrl = process.env.SITE_URL ?? 'http://localhost:3000';
+  const siteUrl = (process.env.SITE_URL ?? 'http://localhost:3000').trim().replace(/[\r\n]/g, '');
   return new Promise((resolve, reject) => {
     https.get(url, { headers: { Referer: siteUrl } }, (res) => {
       let body = '';
